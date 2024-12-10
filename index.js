@@ -24,28 +24,44 @@ const path = require('path');
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
+
 // Konfigurasi penyimpanan file menggunakan Multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // Menyimpan file di folder 'uploads'
+    cb(null, 'uploads/'); // Pastikan hanya 'uploads/' tanpa path tambahan
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + path.extname(file.originalname)); // Menambahkan nama unik pada file
   }
 });
 
+
 // Menggunakan multer untuk menangani file upload
-const upload = multer({ storage: storage });
+const upload = multer({ 
+  storage: storage,
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    if (allowedTypes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Tipe file tidak diizinkan. Hanya JPEG, PNG, dan GIF yang diperbolehkan.'));
+    }
+  },
+  limits: {
+    fileSize: 5 * 1024 * 1024 // 5MB
+  }
+});
 
 // Route untuk membuat data kucing dengan foto
 app.post('/api/v1/kucing', upload.single('foto'), kucingController.createKucing);
 
 // Route untuk Kucing (akses terbuka)
-app.get("/api/v1/kucing", kucingController.getKucing);
-app.get("/api/v1/kucing/:id", kucingController.getKucingById);
-app.post("/api/v1/kucing", kucingController.createKucing);
-app.put("/api/v1/kucing/:id", kucingController.updateKucing);
-app.delete("/api/v1/kucing/:id", kucingController.deleteKucing);
+app.get("/api/v1/kucing/available",verifyToken,kucingController.getAvailableKucing)
+app.get("/api/v1/kucing",verifyToken, kucingController.getKucing);
+app.get("/api/v1/kucing/:id", verifyToken,kucingController.getKucingById);
+app.post("/api/v1/kucing",verifyToken, verifyAdmin, kucingController.createKucing);
+app.put("/api/v1/kucing/:id",verifyToken, verifyAdmin,upload.single('foto'), kucingController.updateKucing);
+app.delete("/api/v1/kucing/:id",verifyToken, verifyAdmin, kucingController.deleteKucing);
 
 // Route untuk Admin (akses terbatas hanya untuk admin)
 app.get("/api/v1/admin", verifyToken, verifyAdmin, adminController.getAdmin);  // Hanya admin yang bisa akses
@@ -59,14 +75,15 @@ app.put("/api/v1/pengguna/:id", penggunaController.updatePengguna);
 app.delete("/api/v1/pengguna/:id", penggunaController.deletePengguna);
 
 // Route untuk Pengajuan (akses terbuka)
-app.get("/api/v1/pengajuan", pengajuanController.getPengajuan);
-app.get("/api/v1/pengajuan/:id", pengajuanController.getPengajuanById);
+app.get("/api/v1/pengajuan", verifyToken,pengajuanController.getPengajuan);
+app.get("/api/v1/pengajuan/:id", verifyToken,pengajuanController.getPengajuanById);
 app.post("/api/v1/pengajuan", pengajuanController.createPengajuan);
 app.put("/api/v1/pengajuan/:id", pengajuanController.updatePengajuan);
 app.delete("/api/v1/pengajuan/:id", pengajuanController.deletePengajuan);
+app.get("/api/v1/pengajuan/user/:id",verifyToken, pengajuanController.getPengajuanByUserId);
 
 // Route untuk Adopsi (akses terbuka)
-app.get("/api/v1/adopsi", adopsiController.getAllAdopsi); 
+app.get("/api/v1/adopsi",verifyToken, adopsiController.getAllAdopsi); 
 app.post("/api/v1/adopsi", adopsiController.createAdopsi); 
 app.get("/api/v1/adopsi/:id", adopsiController.getAdopsiById);
 app.put("/api/v1/adopsi/:id", adopsiController.updateAdopsi); 
