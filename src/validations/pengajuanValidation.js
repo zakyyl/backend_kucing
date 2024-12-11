@@ -14,8 +14,8 @@ const pengajuanValidationSchema = Joi.object({
   }),
 
   motivasi: Joi.string()
-    .min(20)  // Minimal 20 karakter
-    .max(500) // Maksimal 500 karakter
+    .min(20)  
+    .max(500) 
     .required()
     .messages({
       'string.empty': 'Motivasi tidak boleh kosong',
@@ -25,8 +25,8 @@ const pengajuanValidationSchema = Joi.object({
     }),
 
   kondisi_rumah: Joi.string()
-    .min(30)  // Minimal 30 karakter
-    .max(500) // Maksimal 500 karakter
+    .min(30)  
+    .max(500) 
     .required()
     .messages({
       'string.empty': 'Kondisi rumah tidak boleh kosong',
@@ -36,8 +36,8 @@ const pengajuanValidationSchema = Joi.object({
     }),
 
   pengalaman_peliharaan: Joi.string()
-    .min(30)  // Minimal 30 karakter
-    .max(500) // Maksimal 500 karakter
+    .min(30)
+    .max(500)
     .required()
     .messages({
       'string.empty': 'Pengalaman memelihara tidak boleh kosong',
@@ -54,14 +54,12 @@ const pengajuanValidationSchema = Joi.object({
     })
 });
 
-// Fungsi validasi
 const validatePengajuan = (data) => {
   const { error, value } = pengajuanValidationSchema.validate(data, { 
-    abortEarly: false // Menampilkan semua kesalahan sekaligus
+    abortEarly: false
   });
 
   if (error) {
-    // Transform error details menjadi object dengan pesan yang lebih mudah dibaca
     const errorMessages = error.details.reduce((acc, curr) => {
       acc[curr.path[0]] = curr.message;
       return acc;

@@ -1,6 +1,5 @@
 const Joi = require('joi');
 
-// Skema validasi Joi untuk registrasi
 const registerSchema = Joi.object({
   nama: Joi.string().min(3).required().messages({
     'string.empty': 'Nama tidak boleh kosong',
