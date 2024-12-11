@@ -3,7 +3,6 @@ const router = express.Router();
 const pengajuanController = require("../../controllers/pengajuancontroller");
 const { verifyToken, verifyAdmin } = require("../../middlewares/verifyRole");
 
-
 router.get("/", verifyToken, pengajuanController.getPengajuan);
 router.get("/:id", verifyToken, pengajuanController.getPengajuanById);
 router.get("/user/:id", verifyToken, pengajuanController.getPengajuanByUserId);

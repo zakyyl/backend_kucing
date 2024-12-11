@@ -19,6 +19,7 @@ const upload = multer({
   limits: { fileSize: 5 * 1024 * 1024 },
 });
 
+
 router.get("/available", verifyToken, kucingController.getAvailableKucing);
 router.get("/", verifyToken, kucingController.getKucing);
 router.get("/:id", verifyToken, kucingController.getKucingById);

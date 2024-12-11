@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const Admin = require('../../models').Admin;
 require('dotenv').config();
-
 const router = express.Router();
 
 router.post('/register', async (req, res) => {

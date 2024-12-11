@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const { registerSchema} = require('../../validations/authValidation');
 const Pengguna = require('../../models').Pengguna;
 const router = express.Router();
+
 require('dotenv').config();
 
 router.post('/register', async (req, res) => {

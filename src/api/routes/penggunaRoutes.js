@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const penggunaController = require("../../controllers/penggunacontroller");
 
+
 router.get("/:id", penggunaController.getPenggunaById);
 router.get("/", penggunaController.getAllPengguna);
 router.post("/", penggunaController.createPengguna);
