@@ -11,11 +11,10 @@ const verifyAdmin = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // Cek apakah role admin
     if (decoded.role !== 'admin') {
       return res.status(403).json({ message: 'Akses hanya untuk admin' });
     }
-
+    
     req.user = decoded;
     next();
   } catch (error) {

@@ -10,8 +10,7 @@ const verifyUser = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    // Cek apakah role pengguna
+    
     if (decoded.role !== 'user') {
       return res.status(403).json({ message: 'Akses hanya untuk pengguna' });
     }
