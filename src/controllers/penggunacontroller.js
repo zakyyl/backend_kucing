@@ -1,6 +1,5 @@
 const { Pengguna } = require("../models");
 
-// Fungsi untuk mengambil semua pengguna
 exports.getAllPengguna = async (req, res) => {
   try {
     const pengguna = await Pengguna.findAll();
@@ -10,12 +9,10 @@ exports.getAllPengguna = async (req, res) => {
   }
 };
 
-// Fungsi untuk mengambil pengguna berdasarkan ID
 exports.getPenggunaById = async (req, res) => {
-  const { id } = req.params;  // Ambil ID pengguna dari parameter URL
+  const { id } = req.params; 
 
   try {
-    // Cari pengguna berdasarkan ID
     const pengguna = await Pengguna.findByPk(id);
 
     if (!pengguna) {
@@ -28,7 +25,6 @@ exports.getPenggunaById = async (req, res) => {
   }
 };
 
-// Fungsi untuk membuat pengguna baru
 exports.createPengguna = async (req, res) => {
   try {
     const { nama, alamat, email, no_telepon } = req.body;
@@ -39,7 +35,6 @@ exports.createPengguna = async (req, res) => {
   }
 };
 
-// Fungsi untuk mengupdate pengguna
 exports.updatePengguna = async (req, res) => {
   const { id } = req.params;
   const { nama, alamat, email, no_telepon } = req.body;
@@ -62,7 +57,6 @@ exports.updatePengguna = async (req, res) => {
   }
 };
 
-// Fungsi untuk menghapus pengguna
 exports.deletePengguna = async (req, res) => {
   const { id } = req.params;
 

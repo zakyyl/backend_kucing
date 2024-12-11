@@ -1,7 +1,7 @@
 const { Pengajuan, Kucing, Pengguna, Adopsi } = require("../models");
 const { validatePengajuan } = require('../validations/pengajuanValidation');
 
-// Fungsi untuk mengambil semua pengajuan
+
 exports.getPengajuan = async (req, res) => {
   try {
     const pengajuanData = await Pengajuan.findAll({
@@ -16,7 +16,7 @@ exports.getPengajuan = async (req, res) => {
   }
 };
 
-// Fungsi untuk mengambil pengajuan berdasarkan ID
+
 exports.getPengajuanById = async (req, res) => {
   const { id } = req.params;
 
@@ -47,7 +47,7 @@ exports.getPengajuanByUserId = async (req, res) => {
       include: [
         {
           model: Kucing, 
-          attributes: ["nama", "foto"], // Tambahkan 'foto' ke dalam attributes
+          attributes: ["nama", "foto"], 
         },
         { model: Pengguna, attributes: ["nama"] },
       ],
@@ -57,12 +57,11 @@ exports.getPengajuanByUserId = async (req, res) => {
       return res.status(404).json({ message: "Pengajuan tidak ditemukan untuk pengguna ini" });
     }
 
-    // Format data yang akan dikirim, menambahkan path foto yang lengkap
     const responseData = pengajuan.map((item) => ({
       ...item.toJSON(),
       Kucing: {
         ...item.Kucing,
-        foto: `uploads/${item.Kucing.foto}`, // Ubah 'path/to/images' ke path tempat Anda menyimpan gambar
+        foto: `uploads/${item.Kucing.foto}`, 
       },
     }));
 
@@ -73,11 +72,8 @@ exports.getPengajuanByUserId = async (req, res) => {
 };
 
 
-
-// Fungsi untuk membuat pengajuan baru
 exports.createPengajuan = async (req, res) => {
   try {
-    // Destructuring data dari request body
     const {
       id_kucing,
       id_pengguna,
@@ -86,11 +82,8 @@ exports.createPengajuan = async (req, res) => {
       kondisi_rumah,
       pengalaman_peliharaan,
     } = req.body;
-
-    // Validasi data
     const validationResult = validatePengajuan(req.body);
 
-    // Jika validasi gagal
     if (!validationResult.isValid) {
       return res.status(400).json({
         status: 'Validation Error',
@@ -98,7 +91,6 @@ exports.createPengajuan = async (req, res) => {
       });
     }
 
-    // Buat pengajuan dengan data yang sudah divalidasi
     const pengajuan = await Pengajuan.create({
       id_kucing,
       id_pengguna,
@@ -108,17 +100,13 @@ exports.createPengajuan = async (req, res) => {
       pengalaman_peliharaan,
     });
 
-    // Kirim respons sukses
     return res.status(201).json({ 
       status: "Created", 
       data: pengajuan 
     });
 
   } catch (error) {
-    // Log error untuk debugging
     console.error('Error creating pengajuan:', error);
-
-    // Kirim respons error
     return res.status(500).json({ 
       status: 'Error',
       message: error.message 
@@ -126,8 +114,6 @@ exports.createPengajuan = async (req, res) => {
   }
 };
 
-// Fungsi untuk memperbarui pengajuan dan mengirimkan ke tabel Adopsi jika statusnya "berhasil"
-// Fungsi untuk memperbarui pengajuan dan mengirimkan ke tabel Adopsi jika statusnya "berhasil"
 exports.updatePengajuan = async (req, res) => {
   const { id } = req.params;
   const {
@@ -139,7 +125,7 @@ exports.updatePengajuan = async (req, res) => {
     pengalaman_peliharaan,
   } = req.body;
 
-  // Validasi status pengajuan
+
   const validStatuses = ['Pending', 'Berhasil', 'Rejected'];
   if (status_pengajuan && !validStatuses.includes(status_pengajuan)) {
     return res.status(400).json({ 
@@ -149,7 +135,6 @@ exports.updatePengajuan = async (req, res) => {
   }
 
   try {
-    // Cari pengajuan berdasarkan ID
     const pengajuan = await Pengajuan.findByPk(id, {
       include: [
         { model: Kucing, attributes: ["id", "nama"] },
@@ -160,11 +145,7 @@ exports.updatePengajuan = async (req, res) => {
     if (!pengajuan) {
       return res.status(404).json({ message: "Pengajuan tidak ditemukan" });
     }
-
-    // Simpan status sebelumnya untuk validasi
     const previousStatus = pengajuan.status_pengajuan;
-
-    // Update data pengajuan
     pengajuan.id_kucing = id_kucing || pengajuan.id_kucing;
     pengajuan.id_pengguna = id_pengguna || pengajuan.id_pengguna;
     pengajuan.status_pengajuan = status_pengajuan || pengajuan.status_pengajuan;
@@ -174,26 +155,22 @@ exports.updatePengajuan = async (req, res) => {
 
     await pengajuan.save();
 
-    // Modifikasi kondisi cek status berhasil
     if (previousStatus !== "Berhasil" && status_pengajuan === "Berhasil") {
-      // Periksa apakah data adopsi sudah ada
       const existingAdopsi = await Adopsi.findOne({ 
         where: { id_pengajuan: pengajuan.id_pengajuan } 
       });
 
       if (!existingAdopsi) {
-        // Buat data di tabel Adopsi
         const adopsi = await Adopsi.create({
           id_pengajuan: pengajuan.id_pengajuan,
           id_kucing: pengajuan.id_kucing,
           nama_kucing: pengajuan.Kucing.nama,
           id_pengguna: pengajuan.id_pengguna,
           nama_pengguna: pengajuan.Pengguna.nama,
-          tanggal_adopsi: new Date(), // Tambahkan tanggal adopsi
+          tanggal_adopsi: new Date(),
           status: "Berhasil",
         });
 
-        // Update status kucing menjadi tidak tersedia
         await Kucing.update(
           { status: 'Tidak Tersedia' }, 
           { where: { id: pengajuan.id_kucing } }
@@ -225,8 +202,6 @@ exports.updatePengajuan = async (req, res) => {
   }
 };
 
-
-// Fungsi untuk menghapus pengajuan
 exports.deletePengajuan = async (req, res) => {
   const { id } = req.params;
 

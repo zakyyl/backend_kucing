@@ -1,6 +1,5 @@
 const { Adopsi, Pengajuan, Kucing, Pengguna } = require("../models");
 
-// Mendapatkan semua data adopsi
 exports.getAllAdopsi = async (req, res) => {
   try {
     const adopsi = await Adopsi.findAll({
@@ -15,12 +14,9 @@ exports.getAllAdopsi = async (req, res) => {
   }
 };
 
-// Membuat data adopsi baru berdasarkan pengajuan yang diterima
 exports.createAdopsi = async (req, res) => {
   try {
     const { id_pengajuan } = req.body;
-
-    // Cari data pengajuan
     const pengajuan = await Pengajuan.findByPk(id_pengajuan, {
       include: [
         { model: Kucing, attributes: ['id', 'nama'] },
@@ -32,7 +28,7 @@ exports.createAdopsi = async (req, res) => {
       return res.status(404).json({ error: "Pengajuan tidak ditemukan" });
     }
 
-    // Buat entri di tabel Adopsi
+
     const adopsi = await Adopsi.create({
       id_pengajuan: pengajuan.id_pengajuan,
       id_kucing: pengajuan.Kucing.id,
@@ -47,7 +43,7 @@ exports.createAdopsi = async (req, res) => {
   }
 };
 
-// Mendapatkan detail adopsi berdasarkan id_adopsi
+
 exports.getAdopsiById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -67,20 +63,21 @@ exports.getAdopsiById = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-// Memperbarui data adopsi berdasarkan id_adopsi
+
+
 exports.updateAdopsi = async (req, res) => {
   try {
     const { id } = req.params;
     const { id_pengajuan, id_kucing, id_pengguna, nama_kucing, nama_pengguna } = req.body;
 
-    // Cari data adopsi berdasarkan ID
+
     const adopsi = await Adopsi.findByPk(id);
 
     if (!adopsi) {
       return res.status(404).json({ error: "Adopsi tidak ditemukan" });
     }
 
-    // Perbarui data
+
     adopsi.id_pengajuan = id_pengajuan || adopsi.id_pengajuan;
     adopsi.id_kucing = id_kucing || adopsi.id_kucing;
     adopsi.id_pengguna = id_pengguna || adopsi.id_pengguna;
@@ -95,7 +92,7 @@ exports.updateAdopsi = async (req, res) => {
   }
 };
 
-// Menghapus data adopsi berdasarkan id_adopsi
+
 exports.deleteAdopsi = async (req, res) => {
   try {
     const { id } = req.params;

@@ -5,10 +5,9 @@ const {Op} = require('sequelize')
 const fs = require('fs');
 
 
-// Konfigurasi storage untuk multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/kucing/'); // Pastikan folder ini ada
+    cb(null, 'uploads/kucing/'); 
   },
   filename: (req, file, cb) => {
     cb(null, `kucing-${Date.now()}${path.extname(file.originalname)}`);
@@ -26,16 +25,16 @@ const upload = multer({
     }
   },
   limits: {
-    fileSize: 5 * 1024 * 1024 // 5MB
+    fileSize: 5 * 1024 * 1024 
   }
 });
 
-// Fungsi untuk mengambil semua data kucing
+
 exports.getKucing = async (req, res) => {
   try {
     const kucing = await Kucing.findAll();
     res.json({ status: "OK", data: kucing });
-  } catch (error) {
+  } catch (error) { // Error Handling
     res.status(500).json({ error: error.message });
   }
 };
@@ -46,7 +45,7 @@ exports.getAvailableKucing = async (req, res) => {
       include: [
         {
           model: Pengajuan,
-          as: 'pengajuans', // Sesuaikan dengan alias di model
+          as: 'pengajuans', 
           where: {
             status_pengajuan: {
               [Op.ne]: 'berhasil'
@@ -56,7 +55,7 @@ exports.getAvailableKucing = async (req, res) => {
         },
         {
           model: Adopsi,
-          as: 'adopsis', // Sesuaikan dengan alias di model
+          as: 'adopsis', 
           required: false
         }
       ],
@@ -70,7 +69,7 @@ exports.getAvailableKucing = async (req, res) => {
       data: kucings
     });
   } catch (error) {
-    console.error('Error fetching available kucing:', error);
+    console.error('Error fetching available kucing:', error); // Error handling 
     res.status(500).json({
       status: 'error',
       message: error.message,
@@ -79,14 +78,14 @@ exports.getAvailableKucing = async (req, res) => {
   }
 };
 
-// Fungsi untuk mengambil data kucing berdasarkan ID
+
 exports.getKucingById = async (req, res) => {
   const { id } = req.params;
 
   try {
     const kucing = await Kucing.findByPk(id);
 
-    if (!kucing) {
+    if (!kucing) { // Error handling 
       return res.status(404).json({ message: "Kucing tidak ditemukan" });
     }
 
@@ -96,13 +95,11 @@ exports.getKucingById = async (req, res) => {
   }
 };
 
-// Fungsi untuk membuat data kucing baru dengan foto
-// Fungsi untuk membuat data kucing baru dengan foto
+
 exports.createKucing = async (req, res) => {
   try {
-    // Pastikan file foto ada, jika tidak null
     const { nama, umur, ras, jk, kondisi, deskripsi } = req.body;
-    const foto = req.file ? req.file.filename : null; // Menyimpan nama file foto yang di-upload
+    const foto = req.file ? req.file.filename : null; 
 
     const kucing = await Kucing.create({
       nama,
@@ -111,16 +108,16 @@ exports.createKucing = async (req, res) => {
       jk,
       kondisi,
       deskripsi,
-      foto, // Menyimpan nama file foto di database
+      foto, 
     });
 
     res.status(201).json({ status: "Created", data: kucing });
-  } catch (error) {
+  } catch (error) { // Error handling 
     res.status(500).json({ error: error.message });
   }
 };
 
-// Fungsi untuk memperbarui data kucing
+
 exports.updateKucing = async (req, res) => {
   const { id } = req.params;
   const { nama, umur, ras, jk, kondisi, deskripsi } = req.body;
@@ -128,11 +125,9 @@ exports.updateKucing = async (req, res) => {
   try {
     const kucing = await Kucing.findByPk(id);
 
-    if (!kucing) {
+    if (!kucing) { // Error handling 
       return res.status(404).json({ message: "Kucing tidak ditemukan" });
     }
-
-    // Update field yang tersedia
     kucing.nama = nama || kucing.nama;
     kucing.umur = umur || kucing.umur;
     kucing.ras = ras || kucing.ras;
@@ -140,14 +135,11 @@ exports.updateKucing = async (req, res) => {
     kucing.kondisi = kondisi || kucing.kondisi;
     kucing.deskripsi = deskripsi || kucing.deskripsi;
 
-    // Handling foto upload
     if (req.file) {
-      // Hapus foto lama jika ada
       if (kucing.foto && fs.existsSync(path.join('uploads/kucing', kucing.foto))) {
         fs.unlinkSync(path.join('uploads/kucing', kucing.foto));
       }
 
-      // Simpan nama file baru
       kucing.foto = req.file.filename;
     }
 
@@ -160,7 +152,7 @@ exports.updateKucing = async (req, res) => {
         foto: kucing.foto ? `/uploads/kucing/${kucing.foto}` : null
       }
     });
-  } catch (error) {
+  } catch (error) {  // Error handling 
     console.error('Update Kucing Error:', error);
     res.status(500).json({ 
       error: 'Gagal memperbarui data kucing', 
@@ -169,18 +161,16 @@ exports.updateKucing = async (req, res) => {
   }
 };
 
-
-// Fungsi untuk menghapus data kucing
 exports.deleteKucing = async (req, res) => {
   const { id } = req.params;
 
   try {
-    console.log('Received delete request for kucing ID:', id);
+    console.log('Received delete request for kucing ID:', id); //Logger
 
-    // Cari kucing terlebih dahulu
+    
     const kucing = await Kucing.findByPk(id);
 
-    if (!kucing) {
+    if (!kucing) {  // Error handling 
       console.log('Kucing not found with ID:', id);
       return res.status(404).json({ 
         status: 'error',
@@ -188,25 +178,24 @@ exports.deleteKucing = async (req, res) => {
       });
     }
 
-    // Hapus file foto jika ada
+    
     if (kucing.foto) {
       const fotoPath = path.join(__dirname, '../uploads/kucing', kucing.foto);
       
       try {
         if (fs.existsSync(fotoPath)) {
           fs.unlinkSync(fotoPath);
-          console.log('Foto berhasil dihapus:', fotoPath);
+          console.log('Foto berhasil dihapus:', fotoPath); //Logger
         }
       } catch (fileError) {
-        console.error('Gagal menghapus foto:', fileError);
-        // Lanjutkan proses meskipun gagal menghapus foto
+        console.error('Gagal menghapus foto:', fileError); //Logger
+        
       }
     }
 
-    // Hapus data kucing dari database
     await kucing.destroy();
 
-    console.log('Kucing berhasil dihapus dengan ID:', id);
+    console.log('Kucing berhasil dihapus dengan ID:', id); //Logger
 
     res.status(200).json({ 
       status: "Deleted", 
@@ -214,7 +203,7 @@ exports.deleteKucing = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Error saat menghapus kucing:', error);
+    console.error('Error saat menghapus kucing:', error); //Logger
     
     res.status(500).json({ 
       status: 'error',

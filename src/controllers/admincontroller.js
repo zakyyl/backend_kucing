@@ -1,4 +1,3 @@
-// controllers/adminController.js
 const { Admin } = require("../models");
 
 exports.getAdmin = async (req, res) => {
