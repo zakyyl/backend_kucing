@@ -1,6 +1,8 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+// const { registerSchema } = require('../validations/authValidation'); // Import validasi
+const { registerSchema} = require('../../validations/authValidation');
 const Pengguna = require('../../models').Pengguna;  // Sesuaikan dengan model pengguna Anda
 require('dotenv').config();
 
@@ -10,9 +12,10 @@ const router = express.Router();
 router.post('/register', async (req, res) => {
   const { nama, email, password, no_telepon, alamat } = req.body;
 
-  // Validasi input, pastikan semua field terisi
-  if (!nama || !email || !password || !no_telepon || !alamat) {
-    return res.status(400).json({ message: 'Semua field harus diisi' });
+  // Validasi input menggunakan Joi
+  const { error } = registerSchema.validate({ nama, email, password, no_telepon, alamat });
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message });
   }
 
   try {
@@ -63,5 +66,7 @@ router.post('/login', async (req, res) => {
 
   res.status(200).json({ message: 'Login berhasil', token });
 });
+
+
 
 module.exports = router;

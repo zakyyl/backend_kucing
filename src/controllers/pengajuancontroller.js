@@ -1,4 +1,5 @@
 const { Pengajuan, Kucing, Pengguna, Adopsi } = require("../models");
+const { validatePengajuan } = require('../validations/pengajuanValidation');
 
 // Fungsi untuk mengambil semua pengajuan
 exports.getPengajuan = async (req, res) => {
@@ -76,6 +77,7 @@ exports.getPengajuanByUserId = async (req, res) => {
 // Fungsi untuk membuat pengajuan baru
 exports.createPengajuan = async (req, res) => {
   try {
+    // Destructuring data dari request body
     const {
       id_kucing,
       id_pengguna,
@@ -85,6 +87,18 @@ exports.createPengajuan = async (req, res) => {
       pengalaman_peliharaan,
     } = req.body;
 
+    // Validasi data
+    const validationResult = validatePengajuan(req.body);
+
+    // Jika validasi gagal
+    if (!validationResult.isValid) {
+      return res.status(400).json({
+        status: 'Validation Error',
+        errors: validationResult.errors
+      });
+    }
+
+    // Buat pengajuan dengan data yang sudah divalidasi
     const pengajuan = await Pengajuan.create({
       id_kucing,
       id_pengguna,
@@ -94,9 +108,21 @@ exports.createPengajuan = async (req, res) => {
       pengalaman_peliharaan,
     });
 
-    res.status(201).json({ status: "Created", data: pengajuan });
+    // Kirim respons sukses
+    return res.status(201).json({ 
+      status: "Created", 
+      data: pengajuan 
+    });
+
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    // Log error untuk debugging
+    console.error('Error creating pengajuan:', error);
+
+    // Kirim respons error
+    return res.status(500).json({ 
+      status: 'Error',
+      message: error.message 
+    });
   }
 };
 
