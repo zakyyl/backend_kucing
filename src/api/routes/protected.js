@@ -1,4 +1,3 @@
-// routes/protected.js
 const express = require('express');
 const authenticate = require('../../middlewares/authenticate');
 
