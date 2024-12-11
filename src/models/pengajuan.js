@@ -43,33 +43,5 @@ module.exports = (sequelize, DataTypes) => {
     Pengajuan.hasOne(models.Adopsi, { foreignKey: 'id_pengajuan', as: 'adopsi' });
   };
   
-
-  // Menambahkan hook afterCreate
-  // Pengajuan.afterCreate(async (pengajuan, options) => {
-  //   try {
-  //     console.log('Hook afterCreate triggered'); // Debugging log
-  //     const { id_kucing, id_pengguna } = pengajuan;
-  
-  //     // Ambil data kucing dan pengguna terkait
-  //     const kucing = await sequelize.models.Kucing.findByPk(id_kucing);
-  //     const pengguna = await sequelize.models.Pengguna.findByPk(id_pengguna);
-  
-  //     if (kucing && pengguna) {
-  //       // Buat entri di tabel adopsi
-  //       await sequelize.models.Adopsi.create({
-  //         id_pengajuan: pengajuan.id_pengajuan,
-  //         id_kucing: kucing.id,
-  //         nama_kucing: kucing.nama, // Nama kucing dari tabel Kucing
-  //         id_pengguna: pengguna.id,
-  //         nama_pengguna: pengguna.nama // Nama pengguna dari tabel Pengguna
-  //       });
-  //       console.log('Adopsi created successfully'); // Debugging log
-  //     }
-  //   } catch (error) {
-  //     console.error("Error creating adopsi: ", error.message);
-  //   }
-  // });
-  
-
   return Pengajuan;
 };

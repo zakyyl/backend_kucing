@@ -6,7 +6,6 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Pengguna extends Model {
     static associate(models) {
-      // define association here
     }
   }
   Pengguna.init({
@@ -33,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     role: {
       type: DataTypes.STRING,
-      defaultValue: 'user', // default role adalah 'user'
+      defaultValue: 'user', 
     }
   }, {
     sequelize,

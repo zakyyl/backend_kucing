@@ -33,15 +33,14 @@ module.exports = (sequelize, DataTypes) => {
     },
     status: {
       type: DataTypes.STRING,
-      allowNull: false, // Status wajib diisi
+      allowNull: false, 
       defaultValue: "diproses",
     }
   }, {
     tableName: 'adopsi',
     timestamps: true
   });
-
-  // Hook untuk mengisi nama_kucing dan nama_pengguna secara otomatis
+  
   Adopsi.beforeCreate(async (adopsi, options) => {
     const kucing = await sequelize.models.Kucing.findByPk(adopsi.id_kucing, {
       attributes: ['nama']

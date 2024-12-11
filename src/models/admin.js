@@ -6,7 +6,6 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Admin extends Model {
     static associate(models) {
-      // define association here
     }
   }
   Admin.init({
@@ -28,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     role: {
       type: DataTypes.STRING,
-      defaultValue: 'Admin', // default role adalah 'admin'
+      defaultValue: 'Admin',
     }
   }, {
     sequelize,

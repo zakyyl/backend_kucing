@@ -3,7 +3,6 @@ const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Kucing extends Model {
     static associate(models) {
-      // Tambahkan asosiasi untuk Kucing
       Kucing.hasMany(models.Pengajuan, { 
         foreignKey: 'id_kucing',
         as: 'pengajuans'
@@ -23,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
     umur: DataTypes.INTEGER,
     kondisi: DataTypes.STRING,
     deskripsi: DataTypes.TEXT,
-    foto: DataTypes.STRING  // Menyimpan nama file foto
+    foto: DataTypes.STRING 
   }, {
     sequelize,
     modelName: 'Kucing',
