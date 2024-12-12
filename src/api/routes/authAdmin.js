@@ -5,6 +5,8 @@ const Admin = require('../../models').Admin;
 require('dotenv').config();
 const router = express.Router();
 
+const SECRET_KEY = process.env.JWT_SECRET
+
 router.post('/register', async (req, res) => {
   const { nama, email, password } = req.body;
   if (!nama || !email || !password) {
@@ -45,7 +47,11 @@ router.post('/login', async (req, res) => {
     return res.status(401).json({ message: 'Password salah' });
   }
 
-  const token = jwt.sign({ id: admin.id, role: 'admin' }, process.env.JWT_SECRET, { expiresIn: '1h' });
+  const token = jwt.sign(
+    { id: admin.id, role: 'admin' },
+    SECRET_KEY,
+    { expiresIn: '1h' }
+  )
   res.status(200).json({ message: 'Login berhasil', token });
 });
 
