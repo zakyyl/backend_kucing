@@ -47,7 +47,7 @@ exports.getPengajuanByUserId = async (req, res) => {
       include: [
         {
           model: Kucing, 
-          attributes: ["nama", "foto"], 
+          attributes: ["id","nama", "foto"], 
         },
         { model: Pengguna, attributes: ["nama"] },
       ],
@@ -57,13 +57,17 @@ exports.getPengajuanByUserId = async (req, res) => {
       return res.status(404).json({ message: "Pengajuan tidak ditemukan untuk pengguna ini" });
     }
 
-    const responseData = pengajuan.map((item) => ({
-      ...item.toJSON(),
-      Kucing: {
-        ...item.Kucing,
-        foto: `uploads/${item.Kucing.foto}`, 
-      },
-    }));
+    const responseData = pengajuan.map((item) => {
+      const plainItem = item.toJSON();
+      return {
+        ...plainItem,
+        Kucing: {
+          id: plainItem.Kucing?.id,
+          nama: plainItem.Kucing?.nama || 'Nama Kucing Tidak Tersedia',
+          foto: plainItem.Kucing?.foto ? `uploads/${plainItem.Kucing.foto}` : null
+        }
+      };
+    });
 
     res.json({ status: "OK", data: responseData });
   } catch (error) {
