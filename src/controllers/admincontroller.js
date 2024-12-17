@@ -11,8 +11,8 @@ exports.getAdmin = async (req, res) => {
 
 exports.createAdmin = async (req, res) => {
   try {
-    const { nama, email, password } = req.body;
-    const admin = await Admin.create({ nama, email, password });
+    const { name, email, password } = req.body;
+    const admin = await Admin.create({ name, email, password });
     res.status(201).json({ status: "Created", data: admin });
   } catch (error) {
     res.status(500).json({ error: error.message });

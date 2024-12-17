@@ -27,8 +27,8 @@ exports.getPenggunaById = async (req, res) => {
 
 exports.createPengguna = async (req, res) => {
   try {
-    const { nama, alamat, email, no_telepon } = req.body;
-    const pengguna = await Pengguna.create({ nama, alamat, email, no_telepon });
+    const { nama, alamat, email, no_telepon, password } = req.body;
+    const pengguna = await Pengguna.create({ nama, alamat, email, no_telepon, password });
     res.status(201).json({ status: "Created", data: pengguna });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -37,7 +37,7 @@ exports.createPengguna = async (req, res) => {
 
 exports.updatePengguna = async (req, res) => {
   const { id } = req.params;
-  const { nama, alamat, email, no_telepon } = req.body;
+  const { nama, alamat, email, no_telepon, password } = req.body;
 
   try {
     const pengguna = await Pengguna.findByPk(id);
@@ -49,6 +49,7 @@ exports.updatePengguna = async (req, res) => {
     pengguna.alamat = alamat || pengguna.alamat;
     pengguna.email = email || pengguna.email;
     pengguna.no_telepon = no_telepon || pengguna.no_telepon;
+    pengguna.password = password || pengguna.password;
 
     await pengguna.save();
     res.json({ status: "Updated", data: pengguna });
