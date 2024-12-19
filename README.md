@@ -1,15 +1,25 @@
 PAWFECT SHELTER
 
-## Built With
+### Built With
 
-![Node.js](https://img.shields.io/badge/Node.js-v18.16.0-green?logo=node.js) ![Express.js](https://img.shields.io/badge/Express.js-v4.21.1-lightgrey?logo=express) ![Sequelize](https://img.shields.io/badge/Sequelize-v6.37.5-blue?logo=sequelize)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-v14.0-blue?logo=postgresql)
-![body-parser](https://img.shields.io/badge/body--parser-v1.20.3-yellowgreen) ![cors](https://img.shields.io/badge/cors-v2.8.5-yellowgreen) ![dotenv](https://img.shields.io/badge/dotenv-v16.4.7-lightblue) ![jsonwebtoken](https://img.shields.io/badge/jsonwebtoken-v9.0.2-orange) ![morgan](https://img.shields.io/badge/morgan-v1.10.0-lightgrey) ![multer](https://img.shields.io/badge/multer-v1.4.5--lts.1-brightgreen)
-![bcryptjs](https://img.shields.io/badge/bcryptjs-v2.4.3-green) ![fs](https://img.shields.io/badge/fs-native-red) ![joi](https://img.shields.io/badge/joi-v17.13.3-purple) ![path](https://img.shields.io/badge/path-native-red) ![pg](https://img.shields.io/badge/pg-v8.13.1-blue) ![pg-hstore](https://img.shields.io/badge/pg--hstore-v2.3.4-lightblue
-![nodemon](https://img.shields.io/badge/nodemon-v3.1.7-brightgreen?logo=nodemon) ![sequelize-cli](https://img.shields.io/badge/sequelize--cli-v6.6.2-blue)
-- [Node.js](https://nodejs.org/)
-- [Express.js](https://expressjs.com/)
-- [Postman](https://www.postman.com/)
+![Node.js](https://img.shields.io/badge/Node.js-green?logo=node.js) 
+![Express.js](https://img.shields.io/badge/Express.js-lightgrey?logo=express) 
+![Sequelize](https://img.shields.io/badge/Sequelize-blue?logo=sequelize) 
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-blue?logo=postgresql) 
+![body-parser](https://img.shields.io/badge/body--parser-yellowgreen) 
+![cors](https://img.shields.io/badge/cors-yellowgreen) 
+![dotenv](https://img.shields.io/badge/dotenv-lightblue) 
+![jsonwebtoken](https://img.shields.io/badge/jsonwebtoken-orange) 
+![morgan](https://img.shields.io/badge/morgan-lightgrey) 
+![multer](https://img.shields.io/badge/multer-brightgreen) 
+![bcryptjs](https://img.shields.io/badge/bcryptjs-green) 
+![fs](https://img.shields.io/badge/fs-native-red) 
+![joi](https://img.shields.io/badge/joi-purple) 
+![path](https://img.shields.io/badge/path-native-red) 
+![pg](https://img.shields.io/badge/pg-blue) 
+![pg-hstore](https://img.shields.io/badge/pg--hstore-lightblue) 
+![nodemon](https://img.shields.io/badge/nodemon-brightgreen?logo=nodemon) 
+![sequelize-cli](https://img.shields.io/badge/sequelize--cli-blue)
 
 ## Installation Guide
 
